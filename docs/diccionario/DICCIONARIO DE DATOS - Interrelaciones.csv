@@ -1,0 +1,15 @@
+ERP FINANCIERO,,,,,
+DICCIONARIO DE DATOS,,,,,
+MÓDULO: CUENTAS POR PAGAR,,,,,
+INTERRELACIONES,,,,,
+,,,,,
+A Relacionar,,,,Relacionadas,
+Nemotécnico,Entidades,Nombre Iterrelacion,Descripción,Nemotécnico,Entidades
+F1M_PROVEEDOR,PROVEEDOR,Int01_Proveedor_Obligacion,Un proveedor puede tener varias obligaciones; cada obligación tiene un proveedor. FK: PrvCod.,F1T_OBLIGACION,OBLIGACIÓN
+F1Z_TIPO_COMPROBANTE,TIPO COMPROBANTE,Int02_Tipo_Obligacion,Un tipo de comprobante puede clasificar varias obligaciones; cada obligación tiene un tipo. FK: DocTipCod.,F1T_OBLIGACION,OBLIGACIÓN
+F1Z_MONEDA,MONEDA,Int03_Moneda_Obligacion,Una moneda puede utilizarse en varias obligaciones; cada obligación tiene una moneda. FK: MonCod.,F1T_OBLIGACION,OBLIGACIÓN
+F1T_OBLIGACION,OBLIGACIÓN,Int04_Obligacion_Pago,Una obligación admite varios pagos; cada pago corresponde a una sola obligación. FK: OblCod.,F1T_PAGO,PAGO
+F1Z_MEDIO_PAGO,MEDIO DE PAGO,Int05_Medio_Pago,Un medio de pago se usa en varios pagos; cada pago requiere un medio. FK: MedCod.,F1T_PAGO,PAGO
+F1Z_BANCO,BANCO,Int06_Banco_Pago,Un banco puede estar asociado a varios pagos; su referencia es opcional según el medio. FK: BanCod.,F1T_PAGO,PAGO
+F1T_PAGO,PAGO,Int07_Pago_Reverso,Un pago admite como máximo un reverso íntegro; cada reverso corresponde a un pago. PK/FK: PagCod.,F1T_REVERSO_PAGO,REVERSO DE PAGO
+F1T_OBLIGACION,OBLIGACIÓN,Int08_Obligacion_CompraRef,Una obligación puede vincularse a varios recursos de Compras; cada vínculo corresponde a una obligación. FK: OblCod.,F1T_REF_COMPRA,REFERENCIA A COMPRAS

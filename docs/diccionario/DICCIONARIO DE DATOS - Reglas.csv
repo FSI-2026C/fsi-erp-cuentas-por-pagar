@@ -1,0 +1,30 @@
+ERP FINANCIERO,,,,,
+DICCIONARIO DE DATOS,,,,,
+MÓDULO: CUENTAS POR PAGAR,,,,,
+REGLAS,,,,,
+,,,,,
+A Dato,,,A Entidad,,
+Nemotécnico,Nombre,Regla,Nemotécnico,Nombre,Regla
+PrvDocNum,Proveedor - identidad,"RE_PrvIdUni: la pareja (PrvDocTip, PrvDocNum) debe ser única; conserva ceros.",F1M_PROVEEDOR,PROVEEDOR,RE_PrvIdent: código e identidad documental del proveedor no se duplican.
+PrvEstReg,Proveedor - estado,RE_PrvEst: un proveedor inactivo no invalida sus obligaciones anteriores.,F1Z_TIPO_COMPROBANTE,TIPO COMPROBANTE,RE_TipDocAct: solo tipos habilitados admiten nuevas obligaciones; exigir serie según tipo.
+DocTipCod,Comprobante - tipo,RE_DocTipFk: el tipo existe en su catálogo y forma parte de la clave documental.,F1Z_MONEDA,MONEDA,RE_MonPEN: operación en PEN; los pagos mantienen la moneda de la obligación.
+MonCod,Obligación - moneda,RE_MonCoin: pago y obligación utilizan la misma moneda; no agregar monedas distintas.,F1Z_MEDIO_PAGO,MEDIO DE PAGO,RE_MedAct: el medio debe estar habilitado; transferencia exige banco y referencia.
+OblCod,Obligación - código,"RE_OblCodUni: identificador de obligación único, obligatorio e inmutable.",F1Z_BANCO,BANCO,RE_BanUso: banco referencial para transferencias; no registra movimientos bancarios.
+OblSolCod,Solicitud - alta,RE_OblAltaIdem: reenviar la misma solicitud no crea una nueva obligación.,F1T_OBLIGACION,OBLIGACIÓN,"RE_OblKDoc: clave documental única (PrvCod, DocTipCod, OblDocSer, OblDocNum)."
+OblDocSer,Comprobante - serie,RE_DocSerCan: normalizar mayúsculas y espacios; serie vacía solo si el tipo lo permite.,F1T_OBLIGACION,OBLIGACIÓN,RE_OblAltaAtom: obligación y referencias se registran en una única transacción.
+OblDocNum,Comprobante - número,RE_DocNumCan: número textual no vacío; conserva ceros y guiones significativos.,F1T_OBLIGACION,OBLIGACIÓN,RE_OblUnica: un comprobante registrado genera una obligación y un vencimiento.
+OblImp,Obligación - importe,"RE_OblImpPos: importe positivo, exacto y con hasta dos decimales; no usar FLOAT.",F1T_OBLIGACION,OBLIGACIÓN,RE_OblInmut: datos económicos aceptados son inmutables; correcciones controladas.
+OblFecEmi,Obligación - emisión,RE_OblEmiVal: fecha de emisión válida en formato AAAA-MM-DD.,F1T_OBLIGACION,OBLIGACIÓN,"RE_OblEstDer: calcular saldo y estado desde pagos efectivos, sin duplicar columnas."
+OblFecVen,Obligación - vencimiento,RE_OblVenVal: vencimiento no anterior a la fecha de emisión.,F1T_OBLIGACION,OBLIGACIÓN,RE_OblEmpUnica: una empresa por instancia; multiempresa requiere ampliar identidad.
+OblRegAct,Obligación - actor,RE_OblActor: conservar identificador del usuario o servicio que registró la obligación.,F1T_PAGO,PAGO,RE_PagInt: cada pago se aplica íntegramente a una obligación; admite pagos parciales.
+PagSolCod,Pago - solicitud,RE_PagIdem: una misma solicitud confirmada no produce pagos duplicados.,F1T_PAGO,PAGO,RE_PagSaldo: suma de pagos efectivos ≤ obligación; saldo ≥ 0.
+PagImp,Pago - importe,RE_PagImpPos: importe positivo y no superior al saldo disponible al confirmar.,F1T_PAGO,PAGO,RE_PagConcur: serializar por obligación y recalcular saldo antes de confirmar.
+PagFec,Pago - fecha,RE_PagFecVal: fecha de pago válida y no anterior a la emisión.,F1T_PAGO,PAGO,RE_PagAtom: el pago y su efecto económico se confirman de forma atómica.
+BanCod,Pago - banco,RE_BanCond: banco vacío en efectivo y obligatorio en transferencia.,F1T_PAGO,PAGO,RE_PagMed: efectivo sin banco ni referencia; transferencia exige ambos.
+PagRefBan,Pago - referencia bancaria,RE_RefBanc: referencia bancaria requerida en transferencias; no es única globalmente.,F1T_PAGO,PAGO,RE_PagReenv: idempotencia de solicitud no sustituye identificación bancaria.
+PagRegAct,Pago - actor,RE_PagActor: conservar usuario autorizado y fecha/hora de confirmación.,F1T_PAGO,PAGO,RE_PagDestino: un pago tiene un destino; no admite reparto ni anticipos.
+PagCod,Reverso - pago referido,RE_RevPagPK: el pago referido es clave primaria y foránea de ReversoPago.,F1T_REVERSO_PAGO,REVERSO DE PAGO,RE_RevUnico: máximo un reverso íntegro por pago; no se revierte un reverso.
+RevSolCod,Reverso - solicitud,RE_RevIdem: repetir el reverso de una misma solicitud no duplica su efecto.,F1T_REVERSO_PAGO,REVERSO DE PAGO,"RE_RevEfect: conservar el pago revertido, excluyéndolo del cálculo del saldo."
+RevMot,Reverso - motivo,"RE_RevMot: el reverso requiere motivo, actor autorizado e instante de registro.",F1T_REVERSO_PAGO,REVERSO DE PAGO,RE_RevPerm: solo usuarios autorizados revierten; conservar el historial.
+RefTip,Compras - tipo externo,"RE_RefTipDom: tipo externo: OC, OC_LINEA, RECEPCION, RECEPCION_LINEA o CONFORMIDAD.",F1T_REF_COMPRA,REFERENCIA A COMPRAS,"RE_RefKComp: PK (OblCod, RefTip, RefExt); OblCod es FK local."
+RefExt,Compras - identificador,RE_RefExt: identificador de Compras no vacío; verificar pertenencia mediante integración.,F1T_REF_COMPRA,REFERENCIA A COMPRAS,RE_RefCuant: la conciliación por cantidades requiere detalle y contrato de Compras.
