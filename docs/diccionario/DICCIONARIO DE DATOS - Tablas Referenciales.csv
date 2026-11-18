@@ -1,0 +1,21 @@
+ERP FINANCIERO,,,,,,,,,,,,,,
+DICCIONARIO DE DATOS,,,,,,,,,,,,,,
+MÓDULO: CUENTAS POR PAGAR,,,,,,,,,,,,,,
+DATOS,,,,,,,,,,,,,,
+Tablas Referenciales,Ord,Sec,Key,Nemotécnico,Nombre,Descripción,Tipo,Long,Dec,Alias,Valores,Rango,Condiciones,Observaciones
+F1Z_TIPO_COMPROBANTE,0,,,,TIPO DE COMPROBANTE,Tipos documentales empleados para identificar el comprobante de una obligación.,,,,,,,Inicio de entidad (Ord=0).,Permite establecer si el documento requiere serie.
+,1,,K,DocTipCod,Código tipo comprobante,Código estable del tipo de sustento,A,32,,,,,Clave primaria del tipo de comprobante; único y obligatorio.,
+,2,,,DocTipDes,Descripción tipo,Nombre del tipo de comprobante,A,200,,,,,Descripción obligatoria; no única.,
+,3,,,DocTipEstReg,Estado de registro,Estado del catálogo de tipos,A,1,,,A / I / *,,Estado A/I/*; solo tipos habilitados para nuevas operaciones.,
+F1Z_MONEDA,0,,,,MONEDA,Monedas utilizadas para registrar obligaciones.,,,,,,,Inicio de entidad (Ord=0).,Los pagos se expresan en la moneda de la obligación; operación inicial en PEN.
+,1,,K,MonCod,Código moneda,Código estable de moneda,A,3,,,PEN,,Clave primaria; código alfabético de tres caracteres.,
+,2,,,MonDes,Descripción moneda,Nombre legible de la moneda,A,200,,,,,Descripción no vacía; no única.,
+,3,,,MonEstReg,Estado de registro,Estado del código monetario,A,1,,,A / I / *,,Estado A/I/*; moneda activa para nuevas obligaciones.,
+F1Z_MEDIO_PAGO,0,,,,MEDIO DE PAGO,Medios utilizados en el registro de pagos.,,,,,,,Inicio de entidad (Ord=0).,Las transferencias requieren banco y referencia.
+,1,,K,MedCod,Código medio,Identificador del medio de pago,A,32,,,EFECTIVO / TRANSFERENCIA,,Clave primaria del medio de pago; único y obligatorio.,
+,2,,,MedDes,Descripción medio,Denominación del medio de pago.,A,200,,,,,Descripción obligatoria.,
+,3,,,MedEstReg,Estado de registro,Estado de disponibilidad del medio,A,1,,,A / I / *,,Estado A/I/*; medio habilitado para nuevos pagos.,
+F1Z_BANCO,0,,,,BANCO,Bancos asociados a los pagos por transferencia.,,,,,,,Inicio de entidad (Ord=0).,"Catálogo de referencia, sin administrar cuentas ni movimientos bancarios."
+,1,,K,BanCod,Código banco,Identificador del banco referencial,A,32,,,,,Clave primaria del banco; único y obligatorio.,Vacío en efectivo; requerido en transferencia.
+,2,,,BanDes,Descripción banco,Nombre del banco.,A,200,,,,,Descripción obligatoria.,
+,3,,,BanEstReg,Estado de registro,Disponibilidad del banco,A,1,,,A / I / *,,Estado A/I/*; banco habilitado para transferencias.,

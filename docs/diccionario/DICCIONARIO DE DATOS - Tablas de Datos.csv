@@ -1,0 +1,45 @@
+ERP FINANCIERO,,,,,,,,,,,,,,
+DICCIONARIO DE DATOS,,,,,,,,,,,,,,
+MÓDULO: CUENTAS POR PAGAR,,,,,,,,,,,,,,
+DATOS,,,,,,,,,,,,,,
+Entidad,Ord,Sec,Key,Nemotécnico,Nombre,Descripción,Tipo,Long,Dec,Alias,Valores,Rango,Condiciones,Observaciones
+F1M_PROVEEDOR,0,,,,PROVEEDOR,Identificación de proveedores vinculados a las obligaciones por pagar.,,,,,,,Inicio de entidad (Ord=0).,Registro local del proveedor; la integración con Compras utilizará identificadores acordados.
+,1,,K,PrvCod,Código de proveedor,Identificador único y estable del proveedor.,A,64,,,,,"Clave primaria del proveedor; único, obligatorio e inmutable.",
+,2,,,PrvDocTip,Tipo de identidad,Tipo de documento o identificador del proveedor.,A,32,,,,,Obligatorio; clave alternativa conjunta con PrvDocNum.,
+,3,,,PrvDocNum,Número de identidad,Número de identidad del proveedor; conserva ceros iniciales.,A,64,,,,,Obligatorio; clave alternativa conjunta con PrvDocTip.,
+,4,,,PrvNom,Nombre de proveedor,Nombre o denominación del proveedor.,A,200,,,,,No vacío; no único,
+,5,,,PrvEstReg,Estado del registro,Estado de habilitación del proveedor.,A,1,,,A / I / *,,A=activo; I=inactivo; *=estado de registro reservado.,
+F1T_OBLIGACION,0,,,,OBLIGACIÓN,"Deuda sustentada por un comprobante, con importe y fecha de vencimiento.",,,,,,,Inicio de entidad (Ord=0).,Un comprobante aceptado genera una obligación; no contempla cuotas múltiples.
+,1,,K,OblCod,Código obligación,Identificador estable del reconocimiento de deuda,A,64,,,,,PK; no nulo; inmutable,
+,2,,,OblSolCod,Token de alta,Identificador opaco de solicitud para reintentos,A,64,,,,,Identificador único de solicitud de alta (idempotencia).,No sustituye identidad documental
+,3,,FK,PrvCod,Proveedor,Contraparte a la que se reconoce la obligación,A,64,,,,,FK local → F1M_PROVEEDOR.PrvCod; parte de identidad documental.,
+,4,,FK,DocTipCod,Tipo de comprobante,Tipo documental del sustento aceptado,A,32,,,,,FK local → F1Z_TIPO_COMPROBANTE.DocTipCod; parte de identidad documental.,
+,5,,,OblDocSer,Serie comprobante,Serie canónica o texto vacío en tipo sin serie,A,64,,,,,Serie canónica obligatoria salvo documentos sin serie.,Conservar ceros y guiones significativos.
+,6,,,OblDocNum,Número comprobante,Número canónico del documento sustentatorio,A,64,,,,,Número canónico obligatorio; conservar ceros a la izquierda.,"Clave documental conjunta con proveedor, tipo y serie."
+,7,,,OblFecEmi,Fecha de emisión,Fecha civil válida del comprobante,A,10,,,,,Fecha real AAAA-MM-DD; tipo físico DATE.,
+,8,,,OblFecVen,Fecha vencimiento,Única fecha civil de exigibilidad,A,10,,,,,Fecha real AAAA-MM-DD; igual o posterior a emisión.,
+,9,,FK,MonCod,Moneda,Moneda del importe reconocido,A,3,,,PEN,,FK local → F1Z_MONEDA.MonCod; sin conversión de moneda.,
+,10,,,OblImp,Importe obligación,Valor monetario reconocido sin almacenaje de saldo,N,14,2,,,"0,01 a 999 999 999 999,99","Importe > 0; exacto, hasta 2 decimales; NUMERIC(14,2).",
+,11,,,OblRegIns,Instante de registro,Momento de aceptación generado por el servidor,A,35,,,,,Instante de registro con zona horaria; TIMESTAMPTZ.,
+,12,,,OblRegAct,Actor del registro,Sujeto autenticado que reconoce la obligación,A,128,,,,,Identificador de usuario o servicio que registró la obligación.,
+F1T_PAGO,0,,,,PAGO,Pago registrado y aplicado a una obligación por pagar.,,,,,,,Inicio de entidad (Ord=0).,Permite pagos parciales de deuda; cada pago tiene un único destino.
+,1,,K,PagCod,Código pago,Identificador estable del pago registrado,A,64,,,,,Clave primaria; código único e inmutable del pago.,
+,2,,,PagSolCod,Token de pago,Clave idempotente del comando de pago,A,64,,,,,Identificador único de solicitud de pago (idempotencia).,
+,3,,FK,OblCod,Obligación destino,Deuda única a la que se aplica todo el importe,A,64,,,,,FK local → F1T_OBLIGACION.OblCod; un destino por pago.,
+,4,,,PagFec,Fecha de pago,Fecha civil en que se registra el pago.,A,10,,,,,"Fecha válida, igual o posterior a emisión del comprobante.",
+,5,,,PagImp,Importe pago,Importe positivo aplicado íntegramente a la deuda,N,14,2,,,"0,01 a 999 999 999 999,99","Importe > 0, hasta 2 decimales y no mayor al saldo disponible.",Importe aplicado equivalente al importe del pago.
+,6,,FK,MedCod,Medio de pago,Modalidad mediante la cual se registra el pago,A,32,,,,,FK local → F1Z_MEDIO_PAGO.MedCod.,
+,7,,FK,BanCod,Banco referencial,"Banco asociado al pago, cuando corresponde.",A,32,,,,,FK local opcional → F1Z_BANCO.BanCod.,Vacío en efectivo; requerido en transferencia.
+,8,,,PagRefBan,Referencia bancaria,Identificador de referencia de la transferencia.,A,128,,,,,Referencia requerida en transferencias; vacía en efectivo.,Referencia bancaria con ámbito de unicidad por definir en integración externa.
+,9,,,PagRegIns,Instante registro pago,Instante de confirmación generado por servidor,A,35,,,,,Instante de registro con zona horaria; TIMESTAMPTZ.,
+,10,,,PagRegAct,Actor del pago,Identidad autenticada del operador,A,128,,,,,Identificador del usuario autorizado para registrar el pago.,
+F1T_REVERSO_PAGO,0,,,,REVERSO DE PAGO,"Registro de la reversión íntegra de un pago, con motivo y trazabilidad.",,,,,,,Inicio de entidad (Ord=0).,Conserva el pago original y permite un solo reverso por pago.
+,1,,K,PagCod,Pago revertido,Identifica el pago neutralizado,A,64,,,,,Clave primaria y FK local → F1T_PAGO.PagCod.,Un único reverso por pago.
+,2,,,RevSolCod,Token de reverso,Identificador idempotente del reverso,A,64,,,,,Identificador único de solicitud de reverso (idempotencia).,
+,3,,,RevMot,Motivo reversión,Justificación no vacía de la operación correctiva,A,500,,,,,Motivo obligatorio de reversión.,
+,4,,,RevRegIns,Instante reversión,Fecha/hora efectiva del registro de reverso,A,35,,,,,Instante de registro con zona horaria; TIMESTAMPTZ.,
+,5,,,RevRegAct,Actor reversión,Identidad autorizada para revertir,A,128,,,,,Identificador del usuario autorizado para revertir.,
+F1T_REF_COMPRA,0,,,,REFERENCIA A COMPRAS,Identificadores de recursos de Compras asociados a una obligación.,,,,,,,Inicio de entidad (Ord=0).,No almacena cantidades de compra; su validación requiere contrato con Compras.
+,1,,K,OblCod,Obligación vinculada,Deuda que conserva referencias a Compras,A,64,,,,,Componente de PK y FK local → F1T_OBLIGACION.OblCod.,Key=K; función FK mixta en Condiciones
+,2,,K,RefTip,Tipo de recurso,Categoría del recurso externo de Compras,A,32,,,OC / OC_LINEA / RECEPCION / RECEPCION_LINEA / CONFORMIDAD,,Componente de PK; tipo de recurso externo de Compras.,
+,3,,K,RefExt,Identificador externo,ID opaco estable del recurso en Compras,A,128,,,,,Componente de PK; identificador estable del recurso en Compras.,Referencia externa; sin FK física ni cantidades asociadas.

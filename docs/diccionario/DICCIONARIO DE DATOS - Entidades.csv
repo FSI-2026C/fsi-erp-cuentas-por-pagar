@@ -1,0 +1,14 @@
+ERP FINANCIERO,,,
+DICCIONARIO DE DATOS,,,
+MÓDULO: CUENTAS POR PAGAR,,,
+ENTIDADES,,,
+Nemotécnico,Nombre,Descripción,Observaciones
+F1M_PROVEEDOR,PROVEEDOR,Identificación de proveedores vinculados a las obligaciones por pagar.,Registro local del proveedor; la integración con Compras utilizará identificadores acordados.
+F1Z_TIPO_COMPROBANTE,TIPO DE COMPROBANTE,Tipos documentales empleados para identificar el comprobante de una obligación.,Permite establecer si el documento requiere serie.
+F1Z_MONEDA,MONEDA,Monedas utilizadas para registrar obligaciones.,Los pagos se expresan en la moneda de la obligación; operación inicial en PEN.
+F1Z_MEDIO_PAGO,MEDIO DE PAGO,Medios utilizados en el registro de pagos.,Las transferencias requieren banco y referencia.
+F1Z_BANCO,BANCO,Bancos asociados a los pagos por transferencia.,"Catálogo de referencia, sin administrar cuentas ni movimientos bancarios."
+F1T_OBLIGACION,OBLIGACIÓN,"Deuda sustentada por un comprobante, con importe y fecha de vencimiento.",Un comprobante aceptado genera una obligación; no contempla cuotas múltiples.
+F1T_PAGO,PAGO,Pago registrado y aplicado a una obligación por pagar.,Permite pagos parciales de deuda; cada pago tiene un único destino.
+F1T_REVERSO_PAGO,REVERSO DE PAGO,"Registro de la reversión íntegra de un pago, con motivo y trazabilidad.",Conserva el pago original y permite un solo reverso por pago.
+F1T_REF_COMPRA,REFERENCIA A COMPRAS,Identificadores de recursos de Compras asociados a una obligación.,No almacena cantidades de compra; su validación requiere contrato con Compras.
