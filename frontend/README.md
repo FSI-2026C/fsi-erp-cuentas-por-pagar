@@ -2,7 +2,7 @@
 
 Contendrá la interfaz del módulo: proyecto React con Vite y TypeScript, estilos con Tailwind CSS y las pantallas del CRUD, que consumen la API del backend.
 
-- **Responsable:** José Manuel Morocco Saico (Frontend).
+- **Responsable:** Condori Idme Raul Wilfredo (Frontend).
 - **Tareas:** [T-14](https://github.com/LeonHatches/fsi-erp-cuentas-por-pagar/issues/15) (proyecto y pantallas) y [T-17](https://github.com/LeonHatches/fsi-erp-cuentas-por-pagar/issues/18) (conexión con la API).
 
 La carpeta permanece vacía hasta T-14. Ver la [guía de implementación](../docs/arquitectura/GUIA_IMPLEMENTACION.md).
