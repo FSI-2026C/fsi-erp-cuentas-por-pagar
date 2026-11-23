@@ -2,7 +2,7 @@
 
 Contendrá el servidor del módulo: proyecto Django con Django REST Framework (modelos, migraciones, serializers, vistas y rutas), la documentación Swagger con drf-spectacular y las pruebas con pytest.
 
-- **Responsable:** Fernando Gerson Luque Guevara (Backend).
+- **Responsable:** Condori Idme Raul Wilfredo (Backend).
 - **Tareas:** [T-11](https://github.com/LeonHatches/fsi-erp-cuentas-por-pagar/issues/12) (proyecto y PostgreSQL), [T-12](https://github.com/LeonHatches/fsi-erp-cuentas-por-pagar/issues/13) (modelos y migraciones) y [T-16](https://github.com/LeonHatches/fsi-erp-cuentas-por-pagar/issues/17) (servicios del CRUD y pruebas).
 
 La carpeta permanece vacía hasta T-11. Ver la [guía de implementación](../docs/arquitectura/GUIA_IMPLEMENTACION.md).
